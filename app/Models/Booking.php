@@ -10,7 +10,7 @@ class Booking extends Model
     use HasFactory;
 
     protected $fillable = [
-        'email','number_of_seats','trip_id','seats_numbers'
+        'email', 'number_of_seats', 'trip_id', 'seats_numbers',
     ];
 
     public function trip()
