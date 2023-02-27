@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Resources\TripResource;
 use App\Models\Trip;
 
 class TripController extends ApiController
@@ -10,6 +11,6 @@ class TripController extends ApiController
     {
         $trips = Trip::all();
 
-        return $this->apiResponse($trips, 'List Trips');
+        return $this->apiResponse(TripResource::collection($trips), 'List Trips');
     }
 }
