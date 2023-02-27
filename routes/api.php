@@ -14,3 +14,4 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('trips', [\App\Http\Controllers\Api\TripController::class, 'index']);
+Route::get('/trips/available-seats', [\App\Http\Controllers\Api\TripController::class,'availableSeats']);

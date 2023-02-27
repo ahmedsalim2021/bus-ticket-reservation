@@ -11,7 +11,8 @@
 - create .env file and copy content of .env.example into it
 - run *php artisan key:generate*
 - add DB credentials to .env file
-- run *php artisan serve* to start project
+- run *php artisan migrate --seed* to create database schema and seeding it
+- run *php artisan serve --port=3000* to start project
 - Run *php artisan test* to run tests
 
 *Docker Installation*
@@ -20,6 +21,7 @@
 - Install Docker compose
 - Run *php artisan sail:install*
 - Run *./vendor/bin/sail up* to start project on url (http://127.0.0.1:3000)
+- Run *./vendor/bin/sail artisan migrate --seed* to create database schema and seeding it
 - Run *./vendor/bin/sail artisan test* to run tests
 
 *Postman APIs documentation*
