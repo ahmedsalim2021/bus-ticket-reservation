@@ -12,14 +12,12 @@ return new class extends Migration {
      */
     public function up()
     {
-        Schema::create('trips', function (Blueprint $table) {
+        Schema::create('seats', function (Blueprint $table) {
             $table->id();
-            $table->string('origin');
-            $table->string('destination');
-            $table->string('distance');
-            $table->string('trip_distance_type');
-            $table->integer('bus_number')->unique();
-            $table->float('price');
+            $table->string('seat_number');
+            $table->integer('bus_number')->index();
+            $table->foreign('bus_number')->references('bus_number')
+                ->on('trips')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -31,6 +29,6 @@ return new class extends Migration {
      */
     public function down()
     {
-        Schema::dropIfExists('buses');
+        Schema::dropIfExists('seats');
     }
 };

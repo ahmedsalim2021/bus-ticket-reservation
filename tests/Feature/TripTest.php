@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Enum\Seat;
 use App\Models\Booking;
 use Tests\TestCase;
 

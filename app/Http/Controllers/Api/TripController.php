@@ -22,16 +22,19 @@ class TripController extends ApiController
             ->whereDate('created_at', today())->get();
 
         //convert list of arrays of booked seats in every booking in one array
-        $bookedSeatsToday = call_user_func_array('array_merge',
+        $bookedSeatsToday = call_user_func_array(
+            'array_merge',
             $todaySeatsNumbersBookings
-                ->pluck('seats_numbers')->toArray());
+                ->pluck('seats_numbers')->toArray()
+        );
 
         //extract available seats from difference between booked seats and all seats
         $availableSeats = array_values(array_diff(Seat::numbers(), $bookedSeatsToday));
 
-        if(empty($availableSeats)){
-            return $this->apiResponse($availableSeats,'No Seats Available',[],206);
+        if (empty($availableSeats)) {
+            return $this->apiResponse($availableSeats, 'No Seats Available', [], 206);
         }
-        return $this->apiResponse($availableSeats,'List Available Seats to book today');
+
+        return $this->apiResponse($availableSeats, 'List Available Seats to book today');
     }
 }
