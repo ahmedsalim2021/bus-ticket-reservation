@@ -29,6 +29,9 @@ class TripController extends ApiController
         //extract available seats from difference between booked seats and all seats
         $availableSeats = array_values(array_diff(Seat::numbers(), $bookedSeatsToday));
 
+        if(empty($availableSeats)){
+            return $this->apiResponse($availableSeats,'No Seats Available',[],206);
+        }
         return $this->apiResponse($availableSeats,'List Available Seats to book today');
     }
 }
