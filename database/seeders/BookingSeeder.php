@@ -14,6 +14,10 @@ class BookingSeeder extends Seeder
      */
     public function run()
     {
-        Booking::factory()->count(555)->create();
+        $bookings = Booking::factory()->count(5)->create();
+
+        foreach ($bookings as $booking) {
+            $booking->seats()->attach($booking->trip->seats->random(rand(1, 10)));
+        }
     }
 }

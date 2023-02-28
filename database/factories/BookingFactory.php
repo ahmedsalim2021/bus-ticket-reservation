@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
-use App\Enum\Seat;
 use App\Models\Trip;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,15 +18,10 @@ class BookingFactory extends Factory
      */
     public function definition()
     {
-        $numberOfSeats = fake()->numberBetween(1, 10);
-        $allSeatsNumbers = Seat::numbers();
-        shuffle($allSeatsNumbers);
-
         return [
-            'email' => fake()->email,
-            'number_of_seats' => $numberOfSeats,
+            'number_of_seats' => fake()->randomNumber(1) == 0 ? 1 : fake()->randomNumber(1),
             'trip_id' => Trip::all()->random()->id,
-            'seats_numbers' => array_slice($allSeatsNumbers, 0, $numberOfSeats),
+            'user_id' => User::factory()->create()->id,
         ];
     }
 }

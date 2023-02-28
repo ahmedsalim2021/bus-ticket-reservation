@@ -11,4 +11,9 @@ class Trip extends Model
     protected $fillable = [
         'origin', 'destination', 'distance', 'trip_distance_type',
     ];
+
+    public function seats()
+    {
+        return $this->hasMany(Seat::class, 'bus_number', 'bus_number');
+    }
 }
