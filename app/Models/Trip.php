@@ -16,4 +16,9 @@ class Trip extends Model
     {
         return $this->hasMany(Seat::class, 'bus_number', 'bus_number');
     }
+
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
+    }
 }

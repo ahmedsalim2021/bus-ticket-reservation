@@ -21,6 +21,7 @@ class TripResource extends JsonResource
             'distance' => $this->distance,
             'trip_type' => $this->trip_distance_type,
             'price' => $this->price,
+            'bus_number' => $this->bus_number,
         ];
     }
 }

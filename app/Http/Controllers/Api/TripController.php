@@ -2,39 +2,45 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Enum\Seat;
+use App\Helpers\HttpHelper;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\AvailableSeatRequest;
 use App\Http\Resources\TripResource;
-use App\Models\Booking;
+use App\Models\Seat;
 use App\Models\Trip;
+use Illuminate\Support\Facades\Cache;
 
-class TripController extends ApiController
+class TripController extends Controller
 {
     public function index()
     {
         $trips = Trip::all();
 
-        return $this->apiResponse(TripResource::collection($trips), 'List Trips');
+        return HttpHelper::apiResponse(TripResource::collection($trips), 'List Trips');
     }
 
-    public function availableSeats()
+    public function availableSeats(AvailableSeatRequest $request)
     {
-        $todaySeatsNumbersBookings = Booking::select('seats_numbers')
-            ->whereDate('created_at', today())->get();
+        $trip = Trip::where('bus_number', $request->bus_number)->first();
 
-        //convert list of arrays of booked seats in every booking in one array
-        $bookedSeatsToday = call_user_func_array(
-            'array_merge',
-            $todaySeatsNumbersBookings
-                ->pluck('seats_numbers')->toArray()
-        );
-
-        //extract available seats from difference between booked seats and all seats
-        $availableSeats = array_values(array_diff(Seat::numbers(), $bookedSeatsToday));
-
-        if (empty($availableSeats)) {
-            return $this->apiResponse($availableSeats, 'No Seats Available', [], 206);
+        if (Cache::get($request->bus_number) != null) {
+            return HttpHelper::apiResponse([], 'You cannot book ticket now, please retry after 2 minutes', [], 203);
         }
 
-        return $this->apiResponse($availableSeats, 'List Available Seats to book today');
+        $todayBookings = $trip->bookings()->whereDate('created_at', today())->get();
+        $todayBookedSeatsIds = $todayBookings->map->seats->flatten()->map->id->flatten();
+
+        $availableSeats = Seat::where('bus_number', $request->bus_number)->
+        whereNotIn('id', $todayBookedSeatsIds)->get();
+
+        if ($availableSeats->isEmpty()) {
+            Cache::forget($request->bus_number);
+
+            return HttpHelper::apiResponse($availableSeats, 'No Seats Available', [], 206);
+        }
+
+        Cache::put($request->bus_number, $trip, 120);
+
+        return HttpHelper::apiResponse($availableSeats, 'List Available Seats to book today');
     }
 }
