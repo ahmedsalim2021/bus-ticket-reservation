@@ -19,6 +19,7 @@ class BookingFactory extends Factory
     public function definition()
     {
         return [
+            'booking_reference' => fake()->randomNumber(5),
             'number_of_seats' => fake()->randomNumber(1) == 0 ? 1 : fake()->randomNumber(1),
             'trip_id' => Trip::all()->random()->id,
             'user_id' => User::factory()->create()->id,
